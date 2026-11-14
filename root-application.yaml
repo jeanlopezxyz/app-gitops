@@ -1,0 +1,21 @@
+# Application raíz: lo ÚNICO que se aplica a mano (sesión 1, paso 9).
+# Apunta a bootstrap/, y todo lo que se agregue ahí lo crea Argo CD (App of Apps).
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
+    targetRevision: main
+    path: bootstrap
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,6 @@
+# Applications hijas de la raíz. Cada sesión agrega aquí lo suyo
+# (platform/argocd, platform/addons, apps/...).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - guestbook.yaml
