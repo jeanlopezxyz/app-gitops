@@ -1,0 +1,42 @@
+# Hook SyncFail: corre solo si el sync falla. Aquí deja un aviso en sus logs;
+# en un equipo real avisaría al canal de guardia o limpiaría lo que quedó a medias.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: catalogo-sync-fail
+  annotations:
+    argocd.argoproj.io/hook: SyncFail
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+  labels:
+    app.kubernetes.io/name: catalogo-sync-fail
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 120
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: catalogo-sync-fail
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: aviso
+          image: docker.io/library/busybox:1.37.0
+          command: ["sh", "-c", "echo \"El sync de catalogo falló a las $(date -u +%H:%M:%S) UTC. Revisa el hook catalogo-migrate.\""]
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+            limits:
+              memory: 16Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
