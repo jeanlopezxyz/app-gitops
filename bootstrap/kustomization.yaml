@@ -10,3 +10,4 @@ resources:
 - keycloak.yaml
 - argocd.yaml
 - cluster-config.yaml
+- catalogo-appset.yaml
