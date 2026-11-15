@@ -1,0 +1,6 @@
+# Configuración de Argo CD que vive en Git. En el laboratorio 4 son solo algunas
+# claves de argocd-cm; en el laboratorio 5 esta carpeta pasa a instalar Argo CD entero.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - argocd-cm.yaml

@@ -1,0 +1,33 @@
+# Solo las claves de argocd-cm que gestiona Git. Con ServerSideApply=true,
+# Argo CD aplica este ConfigMap parcial y no toca el resto de las claves.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/health/#way-1-define-a-custom-health-check-in-argocd-cm-configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+data:
+  # Health check de catalogo.example.com/Promocion (laboratorio 4).
+  resource.customizations.health.catalogo.example.com_Promocion: |
+    local hs = {}
+    if obj.spec == nil or obj.spec.descuento == nil then
+      hs.status = "Degraded"
+      hs.message = "Falta spec.descuento"
+      return hs
+    end
+    if obj.spec.activa == false then
+      hs.status = "Suspended"
+      hs.message = "Promoción pausada"
+      return hs
+    end
+    if obj.spec.descuento > 50 then
+      hs.status = "Degraded"
+      hs.message = "Descuento de " .. obj.spec.descuento .. " %: el máximo es 50 %"
+      return hs
+    end
+    hs.status = "Healthy"
+    hs.message = "Descuento de " .. obj.spec.descuento .. " %"
+    return hs
