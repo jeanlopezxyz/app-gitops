@@ -11,17 +11,25 @@ spec:
   project: team-api
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-03
+    targetRevision: solucion/lab-04
     path: apps/catalogo/overlays/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: catalogo-dev
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: catalogo-frontend
+      jsonPointers:
+        - /spec/replicas
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
     retry:
       limit: 5
       backoff:
