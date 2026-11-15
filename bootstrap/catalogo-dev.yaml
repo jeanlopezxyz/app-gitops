@@ -19,9 +19,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-    retry: # el primer sync puede llegar antes que los CRD de CloudNativePG
-      limit: 5
-      backoff:
-        duration: 10s
-        factor: 2
-        maxDuration: 3m
