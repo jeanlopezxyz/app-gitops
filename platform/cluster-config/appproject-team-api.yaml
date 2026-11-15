@@ -1,8 +1,7 @@
-# team-api (laboratorio 6): dev y qa en el hub y prod en el spoke, solo en catalogo-prod.
-# Reemplaza a platform/cluster-config/appproject-team-api.yaml del laboratorio 3: el
-# comodín catalogo-* del hub pasa a ser dev y qa, así prod ya no puede volver al hub.
-# Sin clusterResourceWhitelist: no puede crear recursos de clúster.
-# Doc: https://argo-cd.readthedocs.io/en/stable/user-guide/projects/
+# team-api con impersonation (laboratorio 6, paso 6): cada destino se sincroniza con
+# team-api-deployer de ese namespace, no con la cuenta de Argo CD.
+# Reemplaza a platform/cluster-config/appproject-team-api.yaml del paso 4.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/#configuring-destination-service-accounts
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
@@ -17,9 +16,19 @@ spec:
       namespace: catalogo-dev
     - server: https://kubernetes.default.svc
       namespace: catalogo-qa
-    # El spoke, por el nombre de su Secret de clúster (paso 3).
     - name: spoke
       namespace: catalogo-prod
+  destinationServiceAccounts:
+    - server: https://kubernetes.default.svc
+      namespace: catalogo-dev
+      defaultServiceAccount: team-api-deployer
+    - server: https://kubernetes.default.svc
+      namespace: catalogo-qa
+      defaultServiceAccount: team-api-deployer
+    # destinationServiceAccounts solo acepta "server", no "name": la IP privada del spoke.
+    - server: https://10.60.5.249:6443
+      namespace: catalogo-prod
+      defaultServiceAccount: team-api-deployer
   namespaceResourceBlacklist:
     - group: ""
       kind: ResourceQuota
