@@ -12,4 +12,4 @@ patches:
     patch: |
       - op: replace
         path: /spec/rules/0/host
-        value: catalogo-dev-alumnoNN.argocd-lab.example.com
+        value: catalogo-dev-alumno03.argocd-lab.sandbox3477.opentlc.com
