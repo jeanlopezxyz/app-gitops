@@ -1,14 +1,19 @@
-# Crea o actualiza el esquema e inserta los productos de ejemplo. Es idempotente.
-# En el laboratorio 4 pasa a ser un hook PreSync de Argo CD.
+# Crea o actualiza el esquema e inserta los productos de ejemplo. Es idempotente,
+# porque un hook corre en cada sync.
+# Hook de Argo CD: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: catalogo-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation # se borra justo antes de la siguiente ejecución
   labels:
     app.kubernetes.io/name: catalogo-migrate
     app.kubernetes.io/component: api
 spec:
-  backoffLimit: 4
+  backoffLimit: 1
+  activeDeadlineSeconds: 300 # un hook colgado no deja el sync abierto para siempre
   template:
     metadata:
       labels:
