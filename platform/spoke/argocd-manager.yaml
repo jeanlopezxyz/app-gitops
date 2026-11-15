@@ -1,17 +1,13 @@
-# Cuenta con la que Argo CD del hub entra al spoke. Acotada: dueña de
-# catalogo-prod y de nada más (ni otros namespaces ni recursos de clúster).
-# Es lo que hace "argocd cluster add", pero con un Role en lugar de cluster-admin:
-# https://argo-cd.readthedocs.io/en/stable/getting_started/#5-register-a-cluster-to-deploy-apps-to-optional
-# https://argo-cd.readthedocs.io/en/stable/operator-manual/security/#cluster-rbac
+# argocd-manager, con la impersonation activa: ya no escribe nada. Lee
+# catalogo-prod (para la caché y el diff de Argo CD) y solo puede hacerse
+# pasar por team-api-deployer. Reemplaza a platform/spoke/argocd-manager.yaml.
+# https://kubernetes.io/docs/reference/access-authn-authz/authentication/#user-impersonation
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: argocd-manager
   namespace: kube-system
 ---
-# Token de larga duración para el Secret de clúster del hub. No rota solo:
-# revocarlo es borrar este Secret.
-# https://kubernetes.io/docs/concepts/configuration/secret/#serviceaccount-token-secrets
 apiVersion: v1
 kind: Secret
 metadata:
@@ -29,7 +25,11 @@ metadata:
 rules:
   - apiGroups: ["*"]
     resources: ["*"]
-    verbs: ["*"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    resourceNames: ["team-api-deployer"]
+    verbs: ["impersonate"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
