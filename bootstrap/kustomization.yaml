@@ -7,3 +7,4 @@ resources:
   - cloudnative-pg.yaml
   - cluster-config.yaml
   - catalogo-dev.yaml
+  - catalogo-prueba.yaml

@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: catalogo-frontend
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
   labels:
     app.kubernetes.io/name: catalogo-frontend
     app.kubernetes.io/component: frontend
