@@ -17,7 +17,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-        revision: solucion/lab-05
+        revision: solucion/lab-06
         directories:
           - path: apps/catalogo/overlays/*
   strategy:
@@ -46,7 +46,7 @@ spec:
       project: team-api
       source:
         repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-        targetRevision: solucion/lab-05
+        targetRevision: solucion/lab-06
         path: "{{ .path.path }}"
       destination:
         server: https://kubernetes.default.svc

@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-05
+    targetRevision: solucion/lab-06
     path: platform/argocd
   destination:
     server: https://kubernetes.default.svc
