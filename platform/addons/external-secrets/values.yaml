@@ -1,0 +1,23 @@
+# Values de External Secrets Operator (ESO). Argo CD los lee de este repo
+# con la fuente "values" de la Application, como en CloudNativePG (lab 2).
+# Values del chart: https://github.com/external-secrets/external-secrets/blob/main/deploy/charts/external-secrets/values.yaml
+resources:
+  requests:
+    cpu: 10m
+    memory: 48Mi
+  limits:
+    memory: 192Mi
+webhook:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+certController:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
