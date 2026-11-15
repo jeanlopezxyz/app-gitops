@@ -1,0 +1,23 @@
+# Argo CD desde Git (laboratorio 4: unas claves de argocd-cm; laboratorio 5: la instalación completa).
+# ServerSideApply=true: Argo CD aplica solo los campos que están en Git y respeta el resto.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#server-side-apply
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
+    targetRevision: trabajo/alumno03
+    path: platform/argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: false # nunca borrar piezas de Argo CD porque falte un archivo
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
