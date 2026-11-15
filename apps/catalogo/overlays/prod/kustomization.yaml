@@ -8,14 +8,13 @@ namespace: catalogo-prod
 
 resources:
 - ../../base
-- externalsecret-db.yaml
 
 # El host del Ingress es un marcador en la base; aquí se pone el real.
 patches:
 - patch: |-
     - op: replace
       path: /spec/rules/0/host
-      value: catalogo-prod-alumno02.argocd-lab.sandbox3477.opentlc.com
+      value: spoke-catalogo-prod-alumno02.argocd-lab.sandbox3477.opentlc.com
   target:
     kind: Ingress
     name: catalogo

@@ -49,7 +49,8 @@ spec:
         targetRevision: solucion/lab-06
         path: "{{ .path.path }}"
       destination:
-        server: https://kubernetes.default.svc
+        # prod vive en el spoke (laboratorio 6); dev y qa, en el hub.
+        name: '{{ if eq .path.basename "prod" }}spoke{{ else }}in-cluster{{ end }}'
         namespace: catalogo-{{ .path.basename }}
       ignoreDifferences: # las réplicas del frontend las decide el HPA (laboratorio 4)
         - group: apps
