@@ -13,12 +13,19 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: catalogo-dev
+  ignoreDifferences: # las réplicas del frontend las decide el HPA, no Git
+    - group: apps
+      kind: Deployment
+      name: catalogo-frontend
+      jsonPointers:
+        - /spec/replicas
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - RespectIgnoreDifferences=true # tampoco las toca al sincronizar
       - PruneLast=true # lo que sobra se borra al final, cuando todo lo nuevo está Healthy
     retry: # el primer sync puede llegar antes que los CRD de CloudNativePG
       limit: 5
