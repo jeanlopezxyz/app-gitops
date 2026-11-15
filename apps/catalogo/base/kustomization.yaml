@@ -12,6 +12,7 @@ labels:
 resources:
   - database-cluster.yaml
   - api-migrate-job.yaml
+  - api-configmap.yaml
   - api-deployment.yaml
   - api-service.yaml
   - frontend-deployment.yaml
