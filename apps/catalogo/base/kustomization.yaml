@@ -19,6 +19,7 @@ resources:
   - frontend-deployment.yaml
   - frontend-service.yaml
   - ingress.yaml
+  - promocion.yaml
 
 images:
   - name: ghcr.io/jeanlopezxyz/catalogo-api
