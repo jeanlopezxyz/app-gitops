@@ -1,4 +1,6 @@
-# team-api: el repo app-gitops y solo los namespaces catalogo-*.
+# team-api (laboratorio 6): dev y qa en el hub y prod en el spoke, solo en catalogo-prod.
+# Reemplaza a platform/cluster-config/appproject-team-api.yaml del laboratorio 3: el
+# comodín catalogo-* del hub pasa a ser dev y qa, así prod ya no puede volver al hub.
 # Sin clusterResourceWhitelist: no puede crear recursos de clúster.
 # Doc: https://argo-cd.readthedocs.io/en/stable/user-guide/projects/
 apiVersion: argoproj.io/v1alpha1
@@ -7,12 +9,17 @@ metadata:
   name: team-api
   namespace: argocd
 spec:
-  description: Equipo API (catalogo en dev, qa y prod)
+  description: Equipo API (catalogo en dev y qa en el hub, prod en el spoke)
   sourceRepos:
     - https://github.com/jeanlopezxyz/app-gitops.git
   destinations:
     - server: https://kubernetes.default.svc
-      namespace: catalogo-*
+      namespace: catalogo-dev
+    - server: https://kubernetes.default.svc
+      namespace: catalogo-qa
+    # El spoke, por el nombre de su Secret de clúster (paso 3).
+    - name: spoke
+      namespace: catalogo-prod
   namespaceResourceBlacklist:
     - group: ""
       kind: ResourceQuota
