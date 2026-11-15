@@ -4,5 +4,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: catalogo-ajustes-v3
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=confirm
 data:
   CATALOGO_MENSAJE: "Bienvenido al catálogo"
