@@ -1,0 +1,9 @@
+# Values del operador de CloudNativePG. Argo CD los lee de este repo con
+# la fuente "values" de la Application (fuentes múltiples).
+# Values del chart: https://github.com/cloudnative-pg/charts/blob/main/charts/cloudnative-pg/values.yaml
+resources:
+  requests:
+    cpu: 20m
+    memory: 64Mi
+  limits:
+    memory: 256Mi

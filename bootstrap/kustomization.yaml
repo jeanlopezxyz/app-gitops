@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
 - guestbook.yaml
 - headlamp.yaml
+- cloudnative-pg.yaml
