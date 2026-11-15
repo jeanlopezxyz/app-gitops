@@ -17,7 +17,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-        revision: solucion/lab-06
+        revision: solucion/lab-07
         directories:
           - path: apps/catalogo/overlays/*
   strategy:
@@ -46,7 +46,7 @@ spec:
       project: team-api
       source:
         repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-        targetRevision: solucion/lab-06
+        targetRevision: solucion/lab-07
         path: "{{ .path.path }}"
       destination:
         # prod vive en el spoke (laboratorio 6); dev y qa, en el hub.

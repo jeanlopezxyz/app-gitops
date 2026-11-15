@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-06
+    targetRevision: solucion/lab-07
     path: platform/addons/keycloak
   destination:
     server: https://kubernetes.default.svc
