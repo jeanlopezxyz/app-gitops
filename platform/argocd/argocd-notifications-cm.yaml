@@ -1,0 +1,25 @@
+# Notificación por webhook cuando una app pasa a Degraded. El receptor es un
+# servidor HTTP dentro del clúster que escribe cada petición en su log.
+# Fuentes: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/services/webhook/
+#          https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/triggers/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-notifications-cm
+data:
+  service.webhook.receptor: |
+    url: http://webhook-receptor.monitoring.svc:8080
+    headers:
+      - name: Content-Type
+        value: application/json
+  template.app-degraded: |
+    webhook:
+      receptor:
+        method: POST
+        path: /argocd/{{.app.metadata.name}}
+        body: |
+          {"app": "{{.app.metadata.name}}", "health": "{{.app.status.health.status}}", "sync": "{{.app.status.sync.status}}", "revision": "{{.app.status.sync.revision}}"}
+  trigger.on-health-degraded: |
+    - description: La aplicación pasó a Degraded
+      send: [app-degraded]
+      when: app.status.health.status == 'Degraded'

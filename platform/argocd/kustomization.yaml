@@ -35,3 +35,7 @@ patches:
     target:
       kind: StatefulSet
       name: argocd-application-controller
+  - path: argocd-notifications-cm.yaml # aviso por webhook de las apps Degraded (laboratorio 7)
+    target:
+      kind: ConfigMap
+      name: argocd-notifications-cm

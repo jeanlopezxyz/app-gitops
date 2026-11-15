@@ -39,6 +39,8 @@ spec:
   template:
     metadata:
       name: catalogo-{{ .path.basename }}
+      annotations:
+        notifications.argoproj.io/subscribe.on-health-degraded.receptor: ""
       labels:
         env: "{{ .path.basename }}"
         app.kubernetes.io/part-of: catalogo
