@@ -1,0 +1,13 @@
+# Argo Rollouts v1.10.2 (chart argo-rollouts 2.43.12): una réplica del controller,
+# sin dashboard, requests pequeños para el hub.
+# Chart: https://github.com/argoproj/argo-helm/tree/main/charts/argo-rollouts
+controller:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi
+dashboard:
+  enabled: false

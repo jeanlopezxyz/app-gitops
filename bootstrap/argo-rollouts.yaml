@@ -1,0 +1,29 @@
+# Argo Rollouts: chart oficial más values desde este repo (fuentes múltiples).
+# Fuente: https://argo-rollouts.readthedocs.io/en/stable/installation/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-rollouts
+  namespace: argocd
+spec:
+  project: default # como los demás add-ons de la plataforma (labs 2 y 3)
+  sources:
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-rollouts
+      targetRevision: 2.43.12
+      helm:
+        valueFiles:
+          - $values/platform/addons/argo-rollouts/values.yaml
+    - repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+      targetRevision: solucion/lab-08
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argo-rollouts
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
