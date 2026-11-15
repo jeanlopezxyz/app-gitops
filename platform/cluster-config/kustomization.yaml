@@ -7,3 +7,4 @@ resources:
 - appproject-team-frontend.yaml
 - appproject-team-api.yaml
 - almacen-secretos.yaml
+- crd-promociones.yaml
