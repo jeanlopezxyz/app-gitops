@@ -14,10 +14,10 @@ metadata:
     # Si se borra la Application, el ConfigMap se queda: sin él, Argo CD no arranca bien.
     argocd.argoproj.io/sync-options: Prune=false,Delete=false
 data:
-  url: https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com
+  url: https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com
   oidc.config: |
     name: Keycloak
-    issuer: https://keycloak-alumno02.argocd-lab.sandbox3477.opentlc.com/realms/argocd
+    issuer: https://keycloak-alumno03.argocd-lab.sandbox3477.opentlc.com/realms/argocd
     clientID: argocd
     enablePKCEAuthentication: true
     refreshTokenThreshold: 2m

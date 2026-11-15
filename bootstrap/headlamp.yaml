@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-04
+    targetRevision: trabajo/alumno03
     path: platform/addons/headlamp
     helm:
       releaseName: headlamp

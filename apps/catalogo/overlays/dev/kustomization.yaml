@@ -15,7 +15,7 @@ patches:
 - patch: |-
     - op: replace
       path: /spec/rules/0/host
-      value: catalogo-dev-alumno02.argocd-lab.sandbox3477.opentlc.com
+      value: catalogo-dev-alumno03.argocd-lab.sandbox3477.opentlc.com
   target:
     kind: Ingress
     name: catalogo

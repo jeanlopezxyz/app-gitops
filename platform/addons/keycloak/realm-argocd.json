@@ -89,20 +89,20 @@
       "standardFlowEnabled": true,
       "directAccessGrantsEnabled": false,
       "implicitFlowEnabled": false,
-      "rootUrl": "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com",
+      "rootUrl": "https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com",
       "baseUrl": "/applications",
-      "adminUrl": "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com",
+      "adminUrl": "https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com",
       "redirectUris": [
-        "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com/auth/callback",
-        "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com/pkce/verify",
+        "https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com/auth/callback",
+        "https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com/pkce/verify",
         "http://localhost:8085/auth/callback"
       ],
       "webOrigins": [
-        "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com"
+        "https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com"
       ],
       "attributes": {
         "pkce.code.challenge.method": "S256",
-        "post.logout.redirect.uris": "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com/applications"
+        "post.logout.redirect.uris": "https://argocd-alumno03.argocd-lab.sandbox3477.opentlc.com/applications"
       },
       "protocolMappers": [
         {

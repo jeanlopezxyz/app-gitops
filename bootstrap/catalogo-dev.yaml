@@ -11,7 +11,7 @@ spec:
   project: team-api
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-04
+    targetRevision: trabajo/alumno03
     path: apps/catalogo/overlays/dev
   destination:
     server: https://kubernetes.default.svc

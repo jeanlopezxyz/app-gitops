@@ -1,6 +1,6 @@
 # /api va a la API y el resto al frontend, en el mismo host.
 # El host es un marcador: cada overlay lo cambia por
-# catalogo-<ambiente>-alumno02.argocd-lab.<dominio>. El TLS lo pone el balanceador.
+# catalogo-<ambiente>-alumno03.argocd-lab.<dominio>. El TLS lo pone el balanceador.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:

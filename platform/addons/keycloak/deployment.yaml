@@ -41,7 +41,7 @@ spec:
                   key: admin
             # URL pública: el TLS lo termina el balanceador del curso.
             - name: KC_HOSTNAME
-              value: https://keycloak-alumno02.argocd-lab.sandbox3477.opentlc.com
+              value: https://keycloak-alumno03.argocd-lab.sandbox3477.opentlc.com
             - name: KC_HTTP_ENABLED
               value: "true"
             - name: KC_HEALTH_ENABLED

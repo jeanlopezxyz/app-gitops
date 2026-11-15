@@ -18,7 +18,7 @@ spec:
         valueFiles:
           - $values/platform/addons/cloudnative-pg/values.yaml
     - repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-      targetRevision: solucion/lab-04
+      targetRevision: trabajo/alumno03
       ref: values
   destination:
     server: https://kubernetes.default.svc

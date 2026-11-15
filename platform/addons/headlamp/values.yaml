@@ -11,7 +11,7 @@ headlamp:
     enabled: true
     ingressClassName: traefik
     hosts:
-      - host: headlamp-alumno02.argocd-lab.sandbox3477.opentlc.com
+      - host: headlamp-alumno03.argocd-lab.sandbox3477.opentlc.com
         paths:
           - path: /
             type: Prefix
