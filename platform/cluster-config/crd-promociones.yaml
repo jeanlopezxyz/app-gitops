@@ -1,0 +1,47 @@
+# CRD propio del curso (laboratorio 4): una promoción del catálogo.
+# Ningún controlador lo procesa: es configuración declarativa. Argo CD no sabe
+# cuándo una Promocion está "sana" hasta que le das un health check en Lua.
+# Fuente: https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: promociones.catalogo.example.com
+spec:
+  group: catalogo.example.com
+  scope: Namespaced
+  names:
+    kind: Promocion
+    listKind: PromocionList
+    plural: promociones
+    singular: promocion
+  versions:
+    - name: v1
+      served: true
+      storage: true
+      additionalPrinterColumns:
+        - name: Producto
+          type: string
+          jsonPath: .spec.producto
+        - name: Descuento
+          type: integer
+          jsonPath: .spec.descuento
+        - name: Activa
+          type: boolean
+          jsonPath: .spec.activa
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              required: ["producto", "descuento"]
+              properties:
+                producto:
+                  type: string
+                descuento:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                activa:
+                  type: boolean
+                  default: true
