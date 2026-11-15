@@ -11,3 +11,4 @@ resources:
 - keycloak.yaml
 - argocd.yaml
 - cluster-config.yaml
+- intruso.yaml

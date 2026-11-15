@@ -1,0 +1,19 @@
+# Prueba del paso 5: una app de team-frontend que intenta desplegar en el
+# namespace de team-api. Es el caso del video 22 de ArgoCon Europe 2026
+# (https://www.youtube.com/watch?v=BPbv78VHYbQ&t=530s). Con todo en el
+# proyecto "default" funcionaría; con AppProjects, Argo CD la rechaza.
+# Se agrega con un commit y se quita con git revert: no se queda en el repo.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: intruso
+  namespace: argocd
+spec:
+  project: team-frontend
+  source:
+    repoURL: https://github.com/argoproj/argocd-example-apps.git
+    targetRevision: HEAD
+    path: guestbook
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: catalogo-dev
