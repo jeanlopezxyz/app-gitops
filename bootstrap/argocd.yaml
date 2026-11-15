@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-04
+    targetRevision: solucion/lab-05
     path: platform/argocd
   destination:
     server: https://kubernetes.default.svc
@@ -18,3 +18,5 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - ServerSideApply=true # obligatorio para Argo CD sobre sí mismo

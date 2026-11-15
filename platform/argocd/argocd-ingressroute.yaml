@@ -1,0 +1,16 @@
+# Publica Argo CD por Traefik (laboratorio 1, paso 4), ahora desde Git.
+# Cambia alumno02 y el dominio por los de tu acceso.md.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/#traefik-v30
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: Host(`argocd-alumno02.argocd-lab.sandbox3477.opentlc.com`)
+      services:
+        - name: argocd-server
+          port: 80
