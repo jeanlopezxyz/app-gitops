@@ -19,6 +19,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      - PruneLast=true # lo que sobra se borra al final, cuando todo lo nuevo está Healthy
     retry: # el primer sync puede llegar antes que los CRD de CloudNativePG
       limit: 5
       backoff:
