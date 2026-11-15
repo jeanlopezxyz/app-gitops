@@ -1,0 +1,11 @@
+# Parámetros de los componentes de Argo CD.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/argocd-cmd-params-cm-yaml/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+data:
+  # El TLS lo termina el balanceador (laboratorio 1, paso 4).
+  server.insecure: "true"
+  # Progressive Syncs, en Beta: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/#enabling-progressive-syncs
+  applicationsetcontroller.enable.progressive.syncs: "true"

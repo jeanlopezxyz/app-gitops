@@ -1,6 +1,13 @@
-# Configuración de Argo CD que vive en Git. En el laboratorio 4 son solo algunas
-# claves de argocd-cm; en el laboratorio 5 esta carpeta pasa a instalar Argo CD entero.
+# Argo CD sobre sí mismo (laboratorio 5): el manifiesto oficial fijado más los
+# cambios del curso como parches. Se sincroniza con ServerSideApply=true.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#manage-argo-cd-using-argo-cd
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: argocd
 resources:
-  - argocd-cm.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.6.1/manifests/install.yaml
+  - argocd-ingressroute.yaml # laboratorio 1, paso 4
+patches:
+  - path: argocd-cmd-params-cm.yaml # server.insecure (laboratorio 1) y progressive syncs
+  - path: argocd-cm.yaml # health check de Promocion (laboratorio 4)
+  - path: applicationset-controller.yaml # espera corta entre pasos de RollingSync
