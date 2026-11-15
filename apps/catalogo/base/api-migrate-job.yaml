@@ -28,7 +28,7 @@ spec:
       containers:
         - name: migrate
           image: ghcr.io/jeanlopezxyz/catalogo-api
-          args: ["migrar"]
+          args: ["migrate"]
           env:
             - name: DB_HOST
               value: catalogo-db-rw
