@@ -7,14 +7,17 @@ kind: Kustomization
 namespace: catalogo-dev
 
 resources:
-  - ../../base
+- ../../base
 
 # El host del Ingress es un marcador en la base; aquí se pone el real.
 patches:
-  - target:
-      kind: Ingress
-      name: catalogo
-    patch: |-
-      - op: replace
-        path: /spec/rules/0/host
-        value: catalogo-dev-alumno02.argocd-lab.sandbox3477.opentlc.com
+- patch: |-
+    - op: replace
+      path: /spec/rules/0/host
+      value: catalogo-dev-alumno02.argocd-lab.sandbox3477.opentlc.com
+  target:
+    kind: Ingress
+    name: catalogo
+replicas:
+- count: 2
+  name: catalogo-frontend
