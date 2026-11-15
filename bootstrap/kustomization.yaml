@@ -10,3 +10,4 @@ resources:
 - external-secrets.yaml
 - keycloak.yaml
 - argocd.yaml
+- cluster-config.yaml

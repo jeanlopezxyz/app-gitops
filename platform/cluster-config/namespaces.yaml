@@ -1,0 +1,20 @@
+# Los namespaces de los equipos los crea la plataforma, no cada equipo:
+# los AppProjects de los equipos no permiten recursos de clúster.
+# Delete=false: borrar la Application no se lleva los namespaces con todo dentro.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: guestbook
+  labels:
+    curso.argocd/equipo: team-frontend
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: catalogo-dev
+  labels:
+    curso.argocd/equipo: team-api
+  annotations:
+    argocd.argoproj.io/sync-options: Delete=false

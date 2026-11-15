@@ -1,0 +1,22 @@
+# team-frontend: solo su repo de origen y solo el namespace guestbook.
+# Sin clusterResourceWhitelist: no puede crear recursos de clúster.
+# Doc: https://argo-cd.readthedocs.io/en/stable/user-guide/projects/
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-frontend
+  namespace: argocd
+spec:
+  description: Equipo frontend (guestbook)
+  sourceRepos:
+    - https://github.com/argoproj/argocd-example-apps.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: guestbook
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: networking.k8s.io
+      kind: NetworkPolicy

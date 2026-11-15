@@ -1,0 +1,22 @@
+# team-api: el repo app-gitops y solo los namespaces catalogo-*.
+# Sin clusterResourceWhitelist: no puede crear recursos de clúster.
+# Doc: https://argo-cd.readthedocs.io/en/stable/user-guide/projects/
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-api
+  namespace: argocd
+spec:
+  description: Equipo API (catalogo en dev, qa y prod)
+  sourceRepos:
+    - https://github.com/jeanlopezxyz/app-gitops.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: catalogo-*
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+    - group: ""
+      kind: LimitRange
+    - group: networking.k8s.io
+      kind: NetworkPolicy

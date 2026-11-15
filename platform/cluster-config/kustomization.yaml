@@ -1,0 +1,8 @@
+# Configuración del clúster que gestiona la plataforma: namespaces de los
+# equipos y sus AppProjects. En el paso 7 se agrega almacen-secretos.yaml.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespaces.yaml
+  - appproject-team-frontend.yaml
+  - appproject-team-api.yaml

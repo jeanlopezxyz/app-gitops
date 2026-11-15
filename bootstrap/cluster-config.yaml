@@ -1,0 +1,25 @@
+# Namespaces, AppProjects y almacén de secretos: lo gestiona la plataforma.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+    targetRevision: solucion/lab-03
+    path: platform/cluster-config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m
