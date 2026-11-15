@@ -1,0 +1,19 @@
+# Configuración del clúster desde platform/cluster-config/ (laboratorio 3).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-config
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
+    targetRevision: main
+    path: platform/cluster-config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

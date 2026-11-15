@@ -1,0 +1,30 @@
+# Operador de CloudNativePG: chart oficial + values desde app-gitops (fuentes múltiples, laboratorio 2).
+# Fuente: https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnative-pg
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://cloudnative-pg.github.io/charts
+      chart: cloudnative-pg
+      targetRevision: 0.29.1
+      helm:
+        releaseName: cnpg
+        valueFiles:
+          - $values/platform/addons/cloudnative-pg/values.yaml
+    - repoURL: https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
+      targetRevision: main
+      ref: values
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cnpg-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true # los CRD de CloudNativePG superan el límite de la anotación

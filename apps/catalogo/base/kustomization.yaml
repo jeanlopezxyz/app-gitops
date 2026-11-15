@@ -1,0 +1,25 @@
+# Base de catalogo: api, frontend, Ingress y la base de datos (Cluster de CloudNativePG).
+# Sin namespace ni host reales: los pone cada overlay (laboratorio 2: apps/catalogo/base).
+# Requiere el operador de CloudNativePG instalado (CRD postgresql.cnpg.io/v1).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+  - pairs:
+      app.kubernetes.io/part-of: catalogo
+    includeSelectors: false
+
+resources:
+  - database-cluster.yaml
+  - api-migrate-job.yaml
+  - api-deployment.yaml
+  - api-service.yaml
+  - frontend-deployment.yaml
+  - frontend-service.yaml
+  - ingress.yaml
+
+images:
+  - name: ghcr.io/jeanlopezxyz/catalogo-api
+    newTag: 1.0.0
+  - name: ghcr.io/jeanlopezxyz/catalogo-frontend
+    newTag: 1.0.0

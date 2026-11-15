@@ -1,0 +1,8 @@
+# Values propios del chart oficial cloudnative-pg (laboratorio 2, fuentes múltiples).
+# Requests pequeños para caber en el hub (t3.medium).
+resources:
+  requests:
+    cpu: 10m
+    memory: 64Mi
+  limits:
+    memory: 256Mi

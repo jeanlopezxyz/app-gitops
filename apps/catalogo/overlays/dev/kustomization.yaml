@@ -1,0 +1,15 @@
+# Overlay dev de catalogo: namespace y host propios (laboratorio 2).
+# Cambia alumnoNN y el dominio por los de tu acceso.md.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: catalogo-dev
+resources:
+  - ../../base
+patches:
+  - target:
+      kind: Ingress
+      name: catalogo
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: catalogo-dev-alumnoNN.argocd-lab.example.com

@@ -1,0 +1,27 @@
+# catalogo en dev: base de Kustomize + overlay dev (laboratorio 2).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: catalogo-dev
+  namespace: argocd
+spec:
+  project: catalogo
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
+    targetRevision: main
+    path: apps/catalogo/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: catalogo-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry: # el primer sync puede llegar antes que los CRD de CloudNativePG
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

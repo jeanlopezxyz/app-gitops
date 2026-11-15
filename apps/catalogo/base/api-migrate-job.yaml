@@ -1,0 +1,56 @@
+# Crea o actualiza el esquema e inserta los productos de ejemplo. Es idempotente.
+# En el laboratorio 4 pasa a ser un hook PreSync de Argo CD.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: catalogo-migrate
+  labels:
+    app.kubernetes.io/name: catalogo-migrate
+    app.kubernetes.io/component: api
+spec:
+  backoffLimit: 4
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: catalogo-migrate
+        app.kubernetes.io/component: api
+    spec:
+      restartPolicy: Never
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: migrate
+          image: ghcr.io/jeanlopezxyz/catalogo-api
+          args: ["migrate"]
+          env:
+            - name: DB_HOST
+              value: catalogo-db-rw
+            - name: DB_NAME
+              value: catalogo
+            - name: DB_USER
+              value: catalogo
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: db-password
+              mountPath: /etc/catalogo/db
+              readOnly: true
+      volumes:
+        - name: db-password
+          secret:
+            secretName: catalogo-db-app
+            items:
+              - key: password
+                path: password

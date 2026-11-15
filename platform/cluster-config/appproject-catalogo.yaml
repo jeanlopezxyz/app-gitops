@@ -1,0 +1,17 @@
+# Proyecto de la aplicación catalogo: solo este repo y solo los namespaces catalogo-*.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/user-guide/projects/
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: catalogo
+  namespace: argocd
+spec:
+  description: Aplicación catalogo en sus ambientes
+  sourceRepos:
+    - https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: catalogo-*
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace # lo exige CreateNamespace=true
