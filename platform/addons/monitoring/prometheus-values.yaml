@@ -1,0 +1,92 @@
+# Prometheus 3.16 (chart prometheus 29.47.2) solo con el servidor: sin Alertmanager,
+# node-exporter, kube-state-metrics ni pushgateway, y sin los trabajos de raspado
+# del clúster. Raspa Argo CD descubriendo los endpoints de sus Services de
+# métricas, así ve cada réplica del controller.
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#prometheus-operator
+# Chart: https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
+alertmanager:
+  enabled: false
+kube-state-metrics:
+  enabled: false
+prometheus-node-exporter:
+  enabled: false
+prometheus-pushgateway:
+  enabled: false
+
+server:
+  retention: 6h
+  global:
+    scrape_interval: 30s
+    evaluation_interval: 30s
+  persistentVolume:
+    enabled: false
+  resources:
+    requests:
+      cpu: 20m
+      memory: 96Mi
+    limits:
+      memory: 384Mi
+
+configmapReload:
+  prometheus:
+    resources:
+      requests:
+        cpu: 1m
+        memory: 8Mi
+      limits:
+        memory: 32Mi
+
+scrapeConfigs:
+  kubernetes-api-servers:
+    enabled: false
+  kubernetes-nodes:
+    enabled: false
+  kubernetes-nodes-cadvisor:
+    enabled: false
+  kubernetes-service-endpoints:
+    enabled: false
+  kubernetes-service-endpoints-slow:
+    enabled: false
+  prometheus-pushgateway:
+    enabled: false
+  kubernetes-services:
+    enabled: false
+  kubernetes-pods:
+    enabled: false
+  kubernetes-pods-slow:
+    enabled: false
+  # Todos los Services de Argo CD exponen sus métricas en un puerto llamado "metrics".
+  argocd:
+    kubernetes_sd_configs:
+      - role: endpointslice
+        namespaces:
+          names: [argocd]
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_endpointslice_port_name]
+        action: keep
+        regex: metrics
+      # Dex no se usa con el SSO del curso por OIDC directo: sin métricas útiles.
+      - source_labels: [__meta_kubernetes_service_name]
+        action: drop
+        regex: argocd-dex-server
+      - source_labels: [__meta_kubernetes_service_name]
+        target_label: service
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+
+# Alerta: una Application lleva 1 minuto Degraded. argocd_app_info lleva el
+# health_status de cada app (métrica del application-controller).
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#application-controller-metrics
+serverFiles:
+  alerting_rules.yml:
+    groups:
+      - name: argocd
+        rules:
+          - alert: ArgoCDAppDegraded
+            expr: argocd_app_info{health_status="Degraded"} == 1
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: "La aplicación {{ $labels.name }} está Degraded"
+              description: "{{ $labels.name }} (proyecto {{ $labels.project }}, destino {{ $labels.dest_server }}) lleva 1 minuto Degraded."

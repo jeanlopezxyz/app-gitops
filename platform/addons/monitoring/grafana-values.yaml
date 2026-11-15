@@ -1,0 +1,59 @@
+# Grafana 13.3 (chart grafana 14.4.1 de grafana-community, OCI), sin persistencia.
+# Chart: https://github.com/grafana-community/helm-charts/tree/main/charts/grafana
+# La contraseña de admin la generas tú en un Secret (paso 3); nunca en Git.
+admin:
+  existingSecret: grafana-admin
+testFramework:
+  enabled: false
+# Sin instalar plugins al arrancar ni buscar actualizaciones: Grafana arranca en
+# segundos y con menos memoria.
+# https://grafana.com/docs/grafana/latest/setup-grafana/configure-grafana/#preinstall_disabled
+grafana.ini:
+  plugins:
+    preinstall_disabled: true
+  analytics:
+    reporting_enabled: false
+    check_for_updates: false
+    check_for_plugin_updates: false
+# Grafana 13 llega a unos 250Mi al arrancar: con 256Mi de límite la mató el OOM.
+# Recreate evita dos pods a la vez durante un cambio.
+deploymentStrategy:
+  type: Recreate
+resources:
+  requests:
+    cpu: 10m
+    memory: 160Mi
+  limits:
+    memory: 448Mi
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  hosts:
+    - grafana-alumno02.argocd-lab.sandbox3477.opentlc.com
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        uid: prometheus
+        url: http://prometheus-server.monitoring.svc
+        access: proxy
+        isDefault: true
+# Dashboard oficial de Argo CD, fijado a la versión del curso.
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#dashboards
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: argocd
+        orgId: 1
+        folder: Argo CD
+        type: file
+        disableDeletion: true
+        options:
+          path: /var/lib/grafana/dashboards/argocd
+dashboards:
+  argocd:
+    argocd:
+      url: https://raw.githubusercontent.com/argoproj/argo-cd/v3.6.1/examples/dashboard.json

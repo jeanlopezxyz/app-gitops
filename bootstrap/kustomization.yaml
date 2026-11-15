@@ -11,3 +11,4 @@ resources:
 - argocd.yaml
 - cluster-config.yaml
 - catalogo-appset.yaml
+- monitoring.yaml

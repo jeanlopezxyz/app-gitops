@@ -1,0 +1,44 @@
+# Prometheus y Grafana en una sola Application de fuentes múltiples: los dos
+# charts oficiales, sus values desde este repo y el receptor del webhook.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/user-guide/multiple_sources/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default # como los demás add-ons de la plataforma (labs 2 y 3)
+  sources:
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: prometheus
+      targetRevision: 29.47.2
+      helm:
+        releaseName: prometheus
+        valueFiles:
+          - $values/platform/addons/monitoring/prometheus-values.yaml
+    # Chart OCI público: sin "oci://" en repoURL.
+    # https://argo-cd.readthedocs.io/en/stable/user-guide/helm/
+    - repoURL: ghcr.io/grafana-community/helm-charts
+      chart: grafana
+      targetRevision: 14.4.1
+      helm:
+        releaseName: grafana
+        valueFiles:
+          - $values/platform/addons/monitoring/grafana-values.yaml
+    - repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+      targetRevision: solucion/lab-07
+      ref: values
+    - repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+      targetRevision: solucion/lab-07
+      path: platform/addons/monitoring/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
