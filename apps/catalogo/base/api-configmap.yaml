@@ -4,6 +4,7 @@ kind: ConfigMap
 metadata:
   name: catalogo-ajustes-v5
   annotations:
+    argocd.argoproj.io/sync-wave: "1"
     argocd.argoproj.io/sync-options: Prune=confirm # no se borra sin aprobación
 data:
   CATALOGO_MENSAJE: "Bienvenido al catálogo"

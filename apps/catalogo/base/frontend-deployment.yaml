@@ -4,6 +4,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: catalogo-frontend
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   labels:
     app.kubernetes.io/name: catalogo-frontend
     app.kubernetes.io/component: frontend

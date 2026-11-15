@@ -6,6 +6,7 @@ kind: Job
 metadata:
   name: catalogo-migrate
   annotations:
+    argocd.argoproj.io/sync-wave: "5"
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation # se borra justo antes de la siguiente ejecución
   labels:
