@@ -23,14 +23,3 @@ spec:
     pods: "15"
     persistentvolumeclaims: "2"
     requests.storage: 4Gi
----
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: catalogo
-  namespace: catalogo-prod
-spec:
-  hard:
-    pods: "15"
-    persistentvolumeclaims: "2"
-    requests.storage: 4Gi

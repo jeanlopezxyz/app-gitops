@@ -1,19 +1,10 @@
-# Namespaces de qa y prod de catalogo (laboratorio 5), como el de dev del laboratorio 3:
+# Namespace de qa de catalogo (laboratorio 5; prod pasó al spoke en el laboratorio 6), como el de dev del laboratorio 3:
 # los crea la plataforma, porque team-api no puede crear recursos de clúster.
 # Delete=false: borrar la Application no se lleva los namespaces con todo dentro.
 apiVersion: v1
 kind: Namespace
 metadata:
   name: catalogo-qa
-  labels:
-    curso.argocd/equipo: team-api
-  annotations:
-    argocd.argoproj.io/sync-options: Delete=false
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: catalogo-prod
   labels:
     curso.argocd/equipo: team-api
   annotations:
