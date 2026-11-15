@@ -1,0 +1,88 @@
+# La API como Rollout canary, sin router de tráfico: el reparto es por número
+# de pods. Con 2 réplicas, setWeight: 50 deja un pod de cada versión detrás del
+# mismo Service, y el frontend dibuja los dos colores. Después espera a que
+# alguien lo promueva.
+# Fuentes: https://argo-rollouts.readthedocs.io/en/stable/features/canary/
+#          https://argo-rollouts.readthedocs.io/en/stable/migrating/
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: catalogo-api
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    app.kubernetes.io/name: catalogo-api
+    app.kubernetes.io/component: api
+spec:
+  replicas: 2
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: catalogo-api
+  strategy:
+    canary:
+      steps:
+        - setWeight: 50
+        - pause: {}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: catalogo-api
+        app.kubernetes.io/component: api
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          # Etiqueta explícita: el "images" de la base no se aplica a los recursos de un
+          # componente, y sin etiqueta Kubernetes descargaría :latest. El "images" del
+          # overlay sí: en dev manda el overlay (y el commit del CI).
+          image: ghcr.io/jeanlopezxyz/catalogo-api:1.0.0
+          envFrom:
+            - configMapRef:
+                name: catalogo-ajustes-v4 # el ConfigMap del laboratorio 4
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: catalogo-db-rw
+            - name: DB_NAME
+              value: catalogo
+            - name: DB_USER
+              value: catalogo
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: db-password
+              mountPath: /etc/catalogo/db
+              readOnly: true
+      volumes:
+        - name: db-password
+          secret:
+            secretName: catalogo-db-app
+            items:
+              - key: password
+                path: password

@@ -1,0 +1,18 @@
+# Componente de Kustomize: cambia el Deployment de la API por un Rollout canary.
+# Lo incluye el overlay que lo necesite (en el laboratorio, dev).
+# https://kubectl.docs.kubernetes.io/guides/config_management/components/
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - rollout.yaml
+patches:
+  - target:
+      group: apps
+      kind: Deployment
+      name: catalogo-api
+    patch: |-
+      $patch: delete
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: catalogo-api
