@@ -8,5 +8,5 @@ metadata:
     argocd.argoproj.io/sync-wave: "3"
 spec:
   producto: Teclado mecánico
-  descuento: 30
+  descuento: 80
   activa: true
