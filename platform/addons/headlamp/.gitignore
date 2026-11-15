@@ -1,0 +1,2 @@
+# Los .tgz que descarga `helm dependency build` no se suben: Argo CD los descarga.
+charts/

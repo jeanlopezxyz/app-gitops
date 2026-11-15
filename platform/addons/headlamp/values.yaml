@@ -1,0 +1,23 @@
+# Values de Headlamp. En un chart envoltorio, los values de la dependencia
+# van bajo una clave con su nombre (headlamp:).
+# Values del chart: https://github.com/kubernetes-sigs/headlamp/blob/main/charts/headlamp/values.yaml
+headlamp:
+  # Por defecto el chart da cluster-admin a la ServiceAccount de Headlamp.
+  # Sin ese binding, cada persona entra con su propio token y ve solo lo que
+  # su RBAC le permite.
+  clusterRoleBinding:
+    create: false
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    hosts:
+      - host: headlamp-alumno02.argocd-lab.sandbox3477.opentlc.com
+        paths:
+          - path: /
+            type: Prefix
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      memory: 128Mi

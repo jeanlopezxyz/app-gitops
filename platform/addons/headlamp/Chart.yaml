@@ -1,0 +1,14 @@
+# Chart "envoltorio" de Headlamp: no trae plantillas propias, solo declara
+# el chart oficial como dependencia, con la versión fijada. Argo CD descarga
+# la dependencia y ejecuta `helm template` sobre esta carpeta.
+# Doc: https://argo-cd.readthedocs.io/en/stable/user-guide/helm/
+# Chart: https://github.com/kubernetes-sigs/headlamp/tree/main/charts/headlamp
+apiVersion: v2
+name: headlamp
+description: Headlamp, el dashboard de Kubernetes de SIG UI, desde su chart oficial
+type: application
+version: 0.46.0
+dependencies:
+  - name: headlamp
+    version: 0.46.0
+    repository: https://kubernetes-sigs.github.io/headlamp/
