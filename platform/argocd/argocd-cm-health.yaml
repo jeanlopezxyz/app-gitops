@@ -1,0 +1,30 @@
+# Parche de Kustomize sobre argocd-cm (laboratorio 4): el health check en Lua de
+# catalogo.example.com/Promocion. Se suma a lo que ya tiene argocd-cm.yaml (SSO del lab 3).
+# En el laboratorio 5 el mismo parche se aplica sobre el argocd-cm del manifiesto oficial.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/health/#way-1-define-a-custom-health-check-in-argocd-cm-configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  resource.customizations.health.catalogo.example.com_Promocion: |
+    local hs = {}
+    if obj.spec == nil or obj.spec.descuento == nil then
+      hs.status = "Degraded"
+      hs.message = "Falta spec.descuento"
+      return hs
+    end
+    if obj.spec.activa == false then
+      hs.status = "Suspended"
+      hs.message = "Promoción pausada"
+      return hs
+    end
+    if obj.spec.descuento > 50 then
+      hs.status = "Degraded"
+      hs.message = "Descuento de " .. obj.spec.descuento .. " %: el máximo es 50 %"
+      return hs
+    end
+    hs.status = "Healthy"
+    hs.message = "Descuento de " .. obj.spec.descuento .. " %"
+    return hs
