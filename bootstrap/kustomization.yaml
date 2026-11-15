@@ -6,5 +6,4 @@ resources:
 - guestbook.yaml
 - cloudnative-pg.yaml
 - cluster-config.yaml
-- catalogo-dev.yaml
 - argocd.yaml
