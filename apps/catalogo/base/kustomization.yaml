@@ -19,6 +19,7 @@ resources:
 - api-configmap.yaml
 - sync-fail-job.yaml
 - promocion.yaml
+- frontend-hpa.yaml
 
 images:
 - name: ghcr.io/jeanlopezxyz/catalogo-api
