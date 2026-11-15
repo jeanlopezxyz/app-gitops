@@ -22,3 +22,8 @@ patches:
 replicas:
 - count: 2
   name: catalogo-frontend
+images:
+- name: ghcr.io/jeanlopezxyz/catalogo-api
+  newTag: 1.0.0
+- name: ghcr.io/jeanlopezxyz/catalogo-frontend
+  newTag: 1.0.0
