@@ -41,6 +41,7 @@ spec:
       name: catalogo-{{ .path.basename }}
       annotations:
         notifications.argoproj.io/subscribe.on-health-degraded.receptor: ""
+        argocd.argoproj.io/manifest-generate-paths: .;../../base
       labels:
         env: "{{ .path.basename }}"
         app.kubernetes.io/part-of: catalogo
