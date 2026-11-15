@@ -1,0 +1,25 @@
+# Namespace y cuota del ambiente prod de catalogo (laboratorio 5).
+# Prune=false y Delete=false: borrar un namespace borra todo lo que contiene, base de datos incluida.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#no-prune-resources
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: catalogo-prod
+  labels:
+    app.kubernetes.io/part-of: catalogo
+    catalogo.example.com/ambiente: prod
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+---
+# Cuota por conteo: no exige requests en cada Pod (los Jobs de CloudNativePG no los declaran todos).
+# Fuente: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: catalogo
+  namespace: catalogo-prod
+spec:
+  hard:
+    pods: "15"
+    persistentvolumeclaims: "2"
+    requests.storage: 4Gi

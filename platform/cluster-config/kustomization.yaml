@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
 - appproject-catalogo.yaml
 - crd-promociones.yaml
+- namespace-catalogo-dev.yaml
+- namespace-catalogo-qa.yaml
+- namespace-catalogo-prod.yaml
