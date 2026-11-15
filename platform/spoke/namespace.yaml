@@ -1,0 +1,5 @@
+# El único namespace del spoke que gestiona Argo CD del hub.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: catalogo-prod
