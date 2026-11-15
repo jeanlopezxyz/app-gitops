@@ -1,0 +1,64 @@
+# Un ambiente de catalogo por carpeta de apps/catalogo/overlays/ (generador Git de directorios).
+# Agregar un ambiente = agregar una carpeta. RollingSync (Beta) sincroniza dev, después qa y después prod.
+# Fuentes: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Git/
+#          https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Progressive-Syncs/
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: catalogo
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  syncPolicy:
+    applicationsSync: create-update
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+        revision: solucion/lab-05
+        directories:
+          - path: apps/catalogo/overlays/*
+  strategy:
+    type: RollingSync
+    rollingSync:
+      steps:
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: [dev]
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: [qa]
+        - matchExpressions:
+            - key: env
+              operator: In
+              values: [prod]
+  template:
+    metadata:
+      name: catalogo-{{ .path.basename }}
+      labels:
+        env: "{{ .path.basename }}"
+        app.kubernetes.io/part-of: catalogo
+    spec:
+      project: team-api
+      source:
+        repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+        targetRevision: solucion/lab-05
+        path: "{{ .path.path }}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: catalogo-{{ .path.basename }}
+      ignoreDifferences: # las réplicas del frontend las decide el HPA (laboratorio 4)
+        - group: apps
+          kind: Deployment
+          name: catalogo-frontend
+          jsonPointers:
+            - /spec/replicas
+      syncPolicy:
+        # Sin "automated": con RollingSync quien sincroniza es el ApplicationSet, paso a paso.
+        syncOptions:
+          - RespectIgnoreDifferences=true
+          - PruneLast=true
