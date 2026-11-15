@@ -32,7 +32,7 @@ spec:
               containerPort: 8080
           envFrom:
             - configMapRef:
-                name: catalogo-ajustes-v4
+                name: catalogo-ajustes-v5
           env:
             - name: DB_HOST
               value: catalogo-db-rw
