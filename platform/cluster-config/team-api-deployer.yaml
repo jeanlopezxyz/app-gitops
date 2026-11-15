@@ -1,0 +1,108 @@
+# Cuenta con la que se sincroniza team-api en el hub (catalogo-dev y catalogo-qa).
+# Va a platform/cluster-config/: la crea la plataforma, no el equipo.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/#prerequisites
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: team-api-deployer
+  namespace: catalogo-dev
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: team-api-deployer
+  namespace: catalogo-dev
+rules:
+  # Solo los tipos que usa catalogo, en su namespace. Nada de Secrets, ServiceAccounts ni RBAC.
+  - apiGroups: [""]
+    resources: ["services", "configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["postgresql.cnpg.io"]
+    resources: ["clusters"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["catalogo.example.com"]
+    resources: ["promociones"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # El ExternalSecret de la contraseña (laboratorio 3): solo existe en el hub.
+  - apiGroups: ["external-secrets.io"]
+    resources: ["externalsecrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: team-api-deployer
+  namespace: catalogo-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: team-api-deployer
+subjects:
+  - kind: ServiceAccount
+    name: team-api-deployer
+    namespace: catalogo-dev
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: team-api-deployer
+  namespace: catalogo-qa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: team-api-deployer
+  namespace: catalogo-qa
+rules:
+  # Solo los tipos que usa catalogo, en su namespace. Nada de Secrets, ServiceAccounts ni RBAC.
+  - apiGroups: [""]
+    resources: ["services", "configmaps"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["postgresql.cnpg.io"]
+    resources: ["clusters"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["catalogo.example.com"]
+    resources: ["promociones"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # El ExternalSecret de la contraseña (laboratorio 3): solo existe en el hub.
+  - apiGroups: ["external-secrets.io"]
+    resources: ["externalsecrets"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: team-api-deployer
+  namespace: catalogo-qa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: team-api-deployer
+subjects:
+  - kind: ServiceAccount
+    name: team-api-deployer
+    namespace: catalogo-qa

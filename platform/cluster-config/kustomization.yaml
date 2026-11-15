@@ -10,3 +10,4 @@ resources:
 - crd-promociones.yaml
 - namespaces-catalogo-qa.yaml
 - cuotas-catalogo.yaml
+- team-api-deployer.yaml
