@@ -1,0 +1,124 @@
+{
+  "realm": "argocd",
+  "displayName": "Curso Argo CD",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "groups": [
+    {
+      "name": "argocd-admins"
+    },
+    {
+      "name": "team-frontend"
+    },
+    {
+      "name": "team-api"
+    }
+  ],
+  "users": [
+    {
+      "username": "pablo",
+      "email": "pablo@example.com",
+      "firstName": "Pablo",
+      "lastName": "Plataforma",
+      "enabled": true,
+      "emailVerified": true,
+      "groups": [
+        "argocd-admins"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${KC_PASSWORD_PABLO}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-argocd"
+      ]
+    },
+    {
+      "username": "ana",
+      "email": "ana@example.com",
+      "firstName": "Ana",
+      "lastName": "Frontend",
+      "enabled": true,
+      "emailVerified": true,
+      "groups": [
+        "team-frontend"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${KC_PASSWORD_ANA}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-argocd"
+      ]
+    },
+    {
+      "username": "beto",
+      "email": "beto@example.com",
+      "firstName": "Beto",
+      "lastName": "Api",
+      "enabled": true,
+      "emailVerified": true,
+      "groups": [
+        "team-api"
+      ],
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${KC_PASSWORD_BETO}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "default-roles-argocd"
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "clientId": "argocd",
+      "name": "Argo CD",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "rootUrl": "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com",
+      "baseUrl": "/applications",
+      "adminUrl": "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com",
+      "redirectUris": [
+        "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com/auth/callback",
+        "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com/pkce/verify",
+        "http://localhost:8085/auth/callback"
+      ],
+      "webOrigins": [
+        "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "https://argocd-alumno02.argocd-lab.sandbox3477.opentlc.com/applications"
+      },
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "full.path": "false",
+            "claim.name": "groups",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ]
+}

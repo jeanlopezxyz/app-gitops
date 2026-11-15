@@ -1,0 +1,19 @@
+# Keycloak, el proveedor OIDC del curso, desde Git con Kustomize.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: keycloak
+
+resources:
+  - credenciales.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+# El realm (cliente argocd con PKCE, grupos y usuarios de prueba) se monta
+# como archivo en /opt/keycloak/data/import. El sufijo con el hash hace que
+# un cambio en el realm reinicie Keycloak y se vuelva a importar.
+configMapGenerator:
+  - name: keycloak-realm
+    files:
+      - realm-argocd.json

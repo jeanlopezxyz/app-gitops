@@ -1,0 +1,36 @@
+# Contraseñas de Keycloak generadas dentro del clúster: en Git solo está la
+# receta, nunca el valor. ESO crea el Secret keycloak-credenciales con una
+# contraseña distinta por clave, una sola vez (refreshInterval: "0").
+# Doc: https://external-secrets.io/latest/api/generator/password/
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: Password
+metadata:
+  name: keycloak-credenciales
+spec:
+  length: 24
+  digits: 6
+  # Sin símbolos: los valores se insertan en el JSON del realm.
+  symbols: 0
+  noUpper: false
+  allowRepeat: true
+  secretKeys:
+    - admin
+    - pablo
+    - ana
+    - beto
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: keycloak-credenciales
+spec:
+  refreshInterval: "0"
+  target:
+    name: keycloak-credenciales
+    creationPolicy: Owner
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: Password
+          name: keycloak-credenciales

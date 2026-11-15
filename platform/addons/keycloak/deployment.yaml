@@ -1,0 +1,104 @@
+# Keycloak en modo desarrollo (start-dev): una réplica, base de datos H2
+# interna y sin volumen. En cada arranque importa el realm "argocd" desde el
+# ConfigMap, así que su configuración vive en Git y no se pierde nada al
+# apagar el laboratorio. Solo para el laboratorio: en producción, `start`,
+# una base de datos externa y TLS (https://www.keycloak.org/server/configuration-production).
+# Base: https://www.keycloak.org/getting-started/getting-started-kube
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  labels:
+    app.kubernetes.io/name: keycloak
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: keycloak
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: keycloak
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.8.2
+          args: ["start-dev", "--import-realm"]
+          env:
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              value: admin
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credenciales
+                  key: admin
+            # URL pública: el TLS lo termina el balanceador del curso.
+            - name: KC_HOSTNAME
+              value: https://keycloak-alumno02.argocd-lab.sandbox3477.opentlc.com
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            # El realm importado lee estas contraseñas con ${KC_PASSWORD_...}:
+            # https://www.keycloak.org/server/importExport
+            - name: KC_PASSWORD_PABLO
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credenciales
+                  key: pablo
+            - name: KC_PASSWORD_ANA
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credenciales
+                  key: ana
+            - name: KC_PASSWORD_BETO
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-credenciales
+                  key: beto
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: management
+              containerPort: 9000
+          startupProbe:
+            httpGet:
+              path: /health/started
+              port: management
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: management
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: management
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 100m
+              memory: 448Mi
+            limits:
+              memory: 768Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: realm
+              mountPath: /opt/keycloak/data/import
+              readOnly: true
+      volumes:
+        - name: realm
+          configMap:
+            name: keycloak-realm

@@ -1,0 +1,28 @@
+# Keycloak desde Git. Necesita los CRD de External Secrets (Application
+# external-secrets): mientras no existen, el sync falla y se reintenta.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+    targetRevision: solucion/lab-03
+    path: platform/addons/keycloak
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: keycloak
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 10s
+        factor: 2
+        maxDuration: 3m

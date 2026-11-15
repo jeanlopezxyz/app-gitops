@@ -8,3 +8,4 @@ resources:
 - cloudnative-pg.yaml
 - catalogo-dev.yaml
 - external-secrets.yaml
+- keycloak.yaml

@@ -1,0 +1,19 @@
+# Solo se publica el puerto de la aplicación (8080). El de gestión (9000),
+# con /health y /metrics, queda dentro del clúster.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: keycloak-alumno02.argocd-lab.sandbox3477.opentlc.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak
+                port:
+                  name: http
