@@ -11,7 +11,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-02
+    targetRevision: solucion/lab-03
     path: apps/catalogo/overlays/dev
   destination:
     server: https://kubernetes.default.svc
