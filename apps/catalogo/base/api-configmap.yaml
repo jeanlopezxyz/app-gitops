@@ -1,0 +1,10 @@
+# Ajustes de la API (laboratorio 4). La API los recibe como variables de entorno
+# (envFrom en catalogo-api). Sirve para ver qué hace Argo CD al renombrar un recurso.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalogo-ajustes-v4
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=confirm
+data:
+  CATALOGO_MENSAJE: "Bienvenido al catálogo"

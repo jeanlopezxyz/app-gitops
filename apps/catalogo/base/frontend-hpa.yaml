@@ -1,0 +1,23 @@
+# El HPA decide las réplicas del frontend: como mínimo 3. Git dice 2 (overlay dev,
+# laboratorio 2), así que sin ignoreDifferences la app queda OutOfSync para siempre.
+# Fuente: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: catalogo-frontend
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: catalogo-frontend
+  minReplicas: 3
+  maxReplicas: 4
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80

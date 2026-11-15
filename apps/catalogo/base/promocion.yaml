@@ -1,0 +1,12 @@
+# Promoción de ejemplo (laboratorio 4). La regla del negocio: ningún descuento
+# pasa del 50 %. El CRD acepta hasta 100, así que solo el health check lo detecta.
+apiVersion: catalogo.example.com/v1
+kind: Promocion
+metadata:
+  name: lanzamiento
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  producto: Teclado mecánico
+  descuento: 30
+  activa: true

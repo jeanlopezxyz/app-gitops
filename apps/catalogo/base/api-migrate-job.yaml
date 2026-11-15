@@ -1,14 +1,19 @@
 # Crea o actualiza el esquema e inserta los productos de ejemplo. Es idempotente.
-# En el laboratorio 4 pasa a ser un hook PreSync de Argo CD.
+# Hook de la fase Sync, wave 1 (laboratorio 4): después de la base de datos, antes de la API.
 apiVersion: batch/v1
 kind: Job
 metadata:
   name: catalogo-migrate
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app.kubernetes.io/name: catalogo-migrate
     app.kubernetes.io/component: api
 spec:
-  backoffLimit: 4
+  backoffLimit: 1
+  activeDeadlineSeconds: 300
   template:
     metadata:
       labels:
