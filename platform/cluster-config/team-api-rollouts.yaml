@@ -1,0 +1,57 @@
+# Con impersonation (laboratorio 6), quien sincroniza catalogo-dev es
+# team-api-deployer: también necesita permiso sobre los Rollouts (y su
+# subrecurso status, que tocan las acciones resume y promote-full).
+# Va a platform/cluster-config/ y se suma al Role del laboratorio 6.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: team-api-deployer-rollouts
+  namespace: catalogo-dev
+rules:
+  - apiGroups: ["argoproj.io"]
+    resources: ["rollouts", "rollouts/status"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: team-api-deployer-rollouts
+  namespace: catalogo-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: team-api-deployer-rollouts
+subjects:
+  - kind: ServiceAccount
+    name: team-api-deployer
+    namespace: catalogo-dev
+---
+# Las acciones de recurso (resume, promote-full…) las ejecuta argocd-server, no
+# el controller, y con impersonation también se hace pasar por la cuenta del
+# equipo. El ClusterRole oficial de argocd-server no incluye "impersonate":
+# sin esto, "argocd app actions run" falla con "cannot impersonate".
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/#feature-scope
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: argocd-server-impersonate
+  namespace: catalogo-dev
+rules:
+  - apiGroups: [""]
+    resources: ["serviceaccounts"]
+    resourceNames: ["team-api-deployer"]
+    verbs: ["impersonate"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: argocd-server-impersonate
+  namespace: catalogo-dev
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argocd-server-impersonate
+subjects:
+  - kind: ServiceAccount
+    name: argocd-server
+    namespace: argocd

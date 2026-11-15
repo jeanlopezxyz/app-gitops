@@ -11,3 +11,4 @@ resources:
 - namespaces-catalogo-qa.yaml
 - cuotas-catalogo.yaml
 - team-api-deployer.yaml
+- team-api-rollouts.yaml
