@@ -8,7 +8,7 @@ metadata:
   name: catalogo-dev
   namespace: argocd
 spec:
-  project: default
+  project: team-api
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
     targetRevision: solucion/lab-03
