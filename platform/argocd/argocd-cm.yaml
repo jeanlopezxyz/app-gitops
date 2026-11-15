@@ -26,3 +26,8 @@ data:
   # Paso 6: cambiar a "false" cuando el SSO de administración funcione.
   # Doc: https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#disable-admin-user
   admin.enabled: "false"
+  # Laboratorio 6: cada sync de team-api con la cuenta de su namespace (impersonation, Beta).
+  # enforced "false": los proyectos sin destinationServiceAccounts siguen con la cuenta del controller.
+  # https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/#configure-enforcement-behavior
+  application.sync.impersonation.enabled: "true"
+  application.sync.impersonation.enforced: "false"
