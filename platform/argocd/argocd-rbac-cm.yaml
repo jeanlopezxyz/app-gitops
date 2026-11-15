@@ -1,0 +1,34 @@
+# RBAC de Argo CD por grupos de Keycloak (claim "groups").
+# Doc: https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: argocd-rbac-cm
+    app.kubernetes.io/part-of: argocd
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+data:
+  # Sin rol por defecto: quien entra sin un grupo conocido no ve nada.
+  # https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/#default-policy-for-authenticated-users
+  policy.default: ""
+  scopes: "[groups]"
+  policy.csv: |
+    # Plataforma: administra Argo CD.
+    g, argocd-admins, role:admin
+
+    # Cada equipo ve, sincroniza y lee logs solo de las apps de su proyecto.
+    # Desde 3.0, ver logs exige "logs, get" explícito.
+    p, role:team-frontend, applications, get, team-frontend/*, allow
+    p, role:team-frontend, applications, sync, team-frontend/*, allow
+    p, role:team-frontend, logs, get, team-frontend/*, allow
+    p, role:team-frontend, projects, get, team-frontend, allow
+    g, team-frontend, role:team-frontend
+
+    p, role:team-api, applications, get, team-api/*, allow
+    p, role:team-api, applications, sync, team-api/*, allow
+    p, role:team-api, logs, get, team-api/*, allow
+    p, role:team-api, projects, get, team-api, allow
+    g, team-api, role:team-api

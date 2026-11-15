@@ -9,3 +9,4 @@ resources:
 - catalogo-dev.yaml
 - external-secrets.yaml
 - keycloak.yaml
+- argocd.yaml

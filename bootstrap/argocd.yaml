@@ -1,0 +1,20 @@
+# Argo CD gestiona sus propios ConfigMaps (argocd-cm y argocd-rbac-cm).
+# Doc: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+    targetRevision: solucion/lab-03
+    path: platform/argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

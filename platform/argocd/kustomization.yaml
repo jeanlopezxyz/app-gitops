@@ -1,0 +1,7 @@
+# Configuración de Argo CD desde Git. En el laboratorio 5 esta carpeta pasa a
+# gestionar toda la instalación (base oficial + estos cambios).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - argocd-cm.yaml
+  - argocd-rbac-cm.yaml
