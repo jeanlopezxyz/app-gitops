@@ -17,6 +17,7 @@ resources:
 - frontend-service.yaml
 - ingress.yaml
 - api-configmap.yaml
+- sync-fail-job.yaml
 
 images:
 - name: ghcr.io/jeanlopezxyz/catalogo-api
