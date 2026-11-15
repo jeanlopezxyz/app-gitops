@@ -8,3 +8,5 @@ resources:
 - appproject-team-api.yaml
 - almacen-secretos.yaml
 - crd-promociones.yaml
+- namespaces-catalogo-qa-prod.yaml
+- cuotas-catalogo.yaml
