@@ -28,10 +28,10 @@ spec:
         valueFiles:
           - $values/platform/addons/monitoring/grafana-values.yaml
     - repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-      targetRevision: solucion/lab-07
+      targetRevision: solucion/lab-08
       ref: values
     - repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-      targetRevision: solucion/lab-07
+      targetRevision: solucion/lab-08
       path: platform/addons/monitoring/manifests
   destination:
     server: https://kubernetes.default.svc

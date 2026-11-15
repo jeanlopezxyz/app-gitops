@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git
-    targetRevision: solucion/lab-07
+    targetRevision: solucion/lab-08
     path: platform/cluster-config
   destination:
     server: https://kubernetes.default.svc

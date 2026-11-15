@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/jeanlopezxyz/app-gitops.git # cambiar por tu repo
-    targetRevision: solucion/lab-07
+    targetRevision: solucion/lab-08
     path: bootstrap
   destination:
     server: https://kubernetes.default.svc
