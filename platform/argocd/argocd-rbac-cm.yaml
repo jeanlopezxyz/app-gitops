@@ -32,3 +32,10 @@ data:
     p, role:team-api, logs, get, team-api/*, allow
     p, role:team-api, projects, get, team-api, allow
     g, team-api, role:team-api
+  # Laboratorio 8: el asistente de IA solo lee el proyecto team-api. Clave propia: Argo CD
+  # la combina con policy.csv sin pisarla. Sin sync, update, delete, override ni action.
+  # https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/#policy-csv-composition
+  policy.mcp.csv: |
+    p, mcp-readonly, applications, get, team-api/*, allow
+    p, mcp-readonly, logs, get, team-api/*, allow
+    p, mcp-readonly, projects, get, team-api, allow

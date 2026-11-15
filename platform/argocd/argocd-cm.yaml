@@ -31,3 +31,6 @@ data:
   # https://argo-cd.readthedocs.io/en/stable/operator-manual/app-sync-using-impersonation/#configure-enforcement-behavior
   application.sync.impersonation.enabled: "true"
   application.sync.impersonation.enforced: "false"
+  # Laboratorio 8: cuenta local del asistente de IA, solo con tokens (apiKey), sin login por la UI.
+  # https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/#create-new-user
+  accounts.mcp-readonly: apiKey
