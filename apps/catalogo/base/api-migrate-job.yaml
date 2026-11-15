@@ -4,11 +4,15 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: catalogo-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
   labels:
     app.kubernetes.io/name: catalogo-migrate
     app.kubernetes.io/component: api
 spec:
-  backoffLimit: 4
+  backoffLimit: 1
+  activeDeadlineSeconds: 300
   template:
     metadata:
       labels:
