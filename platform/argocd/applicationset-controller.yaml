@@ -1,0 +1,15 @@
+# Solo para el laboratorio: el controller de ApplicationSet espera 30 s por defecto
+# antes de refrescar las apps de un paso de RollingSync; con 5 s la demo es más ágil.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/server-commands/argocd-applicationset-controller/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-applicationset-controller
+spec:
+  template:
+    spec:
+      containers:
+        - name: argocd-applicationset-controller
+          env:
+            - name: ARGOCD_APPLICATIONSET_CONTROLLER_REFRESH_GRACE_PERIOD_SECONDS
+              value: "5"

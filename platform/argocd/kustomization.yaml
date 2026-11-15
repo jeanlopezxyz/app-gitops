@@ -1,9 +1,32 @@
-# Configuración de Argo CD desde Git. En el laboratorio 5 esta carpeta pasa a
-# gestionar toda la instalación (base oficial + estos cambios).
+# Argo CD sobre sí mismo (laboratorio 5): el manifiesto oficial fijado más los
+# cambios del curso como parches. Se sincroniza con ServerSideApply=true.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#manage-argo-cd-using-argo-cd
+# Cada parche lleva su target: los objetos de install.yaml no tienen namespace hasta que
+# Kustomize aplica "namespace: argocd", y los ConfigMaps del lab 3 sí lo declaran.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: argocd
 resources:
-- argocd-cm.yaml
-- argocd-rbac-cm.yaml
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.6.1/manifests/install.yaml
+  - argocd-ingressroute.yaml # laboratorio 1, paso 4
 patches:
-- path: argocd-cm-health.yaml
+  - path: argocd-cm.yaml # SSO y admin deshabilitado (laboratorio 3)
+    target:
+      kind: ConfigMap
+      name: argocd-cm
+  - path: argocd-rbac-cm.yaml # RBAC por grupos (laboratorio 3)
+    target:
+      kind: ConfigMap
+      name: argocd-rbac-cm
+  - path: argocd-cm-health.yaml # health check de Promocion (laboratorio 4)
+    target:
+      kind: ConfigMap
+      name: argocd-cm
+  - path: argocd-cmd-params-cm.yaml # server.insecure (laboratorio 1) y progressive syncs
+    target:
+      kind: ConfigMap
+      name: argocd-cmd-params-cm
+  - path: applicationset-controller.yaml # espera corta entre pasos de RollingSync
+    target:
+      kind: Deployment
+      name: argocd-applicationset-controller
