@@ -18,6 +18,7 @@ resources:
 - ingress.yaml
 - api-configmap.yaml
 - sync-fail-job.yaml
+- promocion.yaml
 
 images:
 - name: ghcr.io/jeanlopezxyz/catalogo-api
