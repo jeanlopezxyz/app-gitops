@@ -8,6 +8,7 @@ namespace: catalogo-dev
 
 resources:
 - ../../base
+- externalsecret-db.yaml
 
 # El host del Ingress es un marcador en la base; aquí se pone el real.
 patches:
