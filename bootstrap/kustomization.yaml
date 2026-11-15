@@ -7,3 +7,4 @@ resources:
   - argocd.yaml
   - cloudnative-pg.yaml
   - cluster-config.yaml
+  - catalogo-appset.yaml
