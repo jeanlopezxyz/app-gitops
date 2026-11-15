@@ -1,0 +1,16 @@
+# Sharding: dos réplicas del application-controller y el mismo número en
+# ARGOCD_CONTROLLER_REPLICAS. Parche estratégico sobre el StatefulSet oficial.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability/#argocd-application-controller
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: argocd-application-controller
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: argocd-application-controller
+          env:
+            - name: ARGOCD_CONTROLLER_REPLICAS
+              value: "2"

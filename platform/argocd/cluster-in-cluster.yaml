@@ -1,0 +1,16 @@
+# El hub (in-cluster) declarado como Secret de clúster para fijarlo al shard 0.
+# No lleva credenciales: Argo CD usa su propia ServiceAccount dentro del clúster.
+# Fuente: https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability/#argocd-application-controller
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-in-cluster
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: cluster
+type: Opaque
+stringData:
+  name: in-cluster
+  server: https://kubernetes.default.svc
+  shard: "0"
+  config: '{"tlsClientConfig":{"insecure":false}}'

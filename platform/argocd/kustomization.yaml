@@ -9,6 +9,7 @@ namespace: argocd
 resources:
   - https://raw.githubusercontent.com/argoproj/argo-cd/v3.6.1/manifests/install.yaml
   - argocd-ingressroute.yaml # laboratorio 1, paso 4
+  - cluster-in-cluster.yaml # el hub en el shard 0 (laboratorio 7)
 patches:
   - path: argocd-cm.yaml # SSO y admin deshabilitado (laboratorio 3)
     target:
@@ -30,3 +31,7 @@ patches:
     target:
       kind: Deployment
       name: argocd-applicationset-controller
+  - path: argocd-application-controller.yaml # dos réplicas del controller (laboratorio 7)
+    target:
+      kind: StatefulSet
+      name: argocd-application-controller
