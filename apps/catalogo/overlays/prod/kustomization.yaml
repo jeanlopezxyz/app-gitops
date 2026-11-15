@@ -1,0 +1,20 @@
+# Overlay prod de catalogo: namespace y host propios (laboratorio 2).
+# Cambia alumnoNN y el dominio por los de tu acceso.md.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: catalogo-prod
+resources:
+- ../../base
+patches:
+- patch: |
+    - op: replace
+      path: /spec/rules/0/host
+      value: catalogo-prod-alumno03.argocd-lab.sandbox3477.opentlc.com
+  target:
+    kind: Ingress
+    name: catalogo
+images:
+- name: ghcr.io/jeanlopezxyz/catalogo-api
+  newTag: 1.0.0
+- name: ghcr.io/jeanlopezxyz/catalogo-frontend
+  newTag: 1.0.0
