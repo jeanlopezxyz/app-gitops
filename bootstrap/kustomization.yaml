@@ -6,3 +6,4 @@ resources:
 - guestbook.yaml
 - headlamp.yaml
 - cloudnative-pg.yaml
+- catalogo-dev.yaml

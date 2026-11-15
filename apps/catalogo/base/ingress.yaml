@@ -1,0 +1,27 @@
+# /api va a la API y el resto al frontend, en el mismo host.
+# El host es un marcador: cada overlay lo cambia por
+# catalogo-<ambiente>-alumno02.argocd-lab.<dominio>. El TLS lo pone el balanceador.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: catalogo
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: catalogo.example.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: catalogo-api
+                port:
+                  name: http
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: catalogo-frontend
+                port:
+                  name: http

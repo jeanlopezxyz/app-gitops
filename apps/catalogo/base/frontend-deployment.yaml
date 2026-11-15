@@ -1,0 +1,59 @@
+# Frontend estático (nginx sin privilegios). nginx escribe su pid y su caché
+# en /tmp, por eso el emptyDir con el sistema de archivos en solo lectura.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogo-frontend
+  labels:
+    app.kubernetes.io/name: catalogo-frontend
+    app.kubernetes.io/component: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: catalogo-frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: catalogo-frontend
+        app.kubernetes.io/component: frontend
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: frontend
+          image: ghcr.io/jeanlopezxyz/catalogo-frontend
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 16Mi

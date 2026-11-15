@@ -1,0 +1,71 @@
+# API de catalogo. La contraseña de la base de datos se monta como archivo
+# (sin subPath), así el kubelet la actualiza al rotar el Secret y la API la
+# relee en cada conexión nueva, sin reiniciar.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogo-api
+  labels:
+    app.kubernetes.io/name: catalogo-api
+    app.kubernetes.io/component: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: catalogo-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: catalogo-api
+        app.kubernetes.io/component: api
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: ghcr.io/jeanlopezxyz/catalogo-api
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: DB_HOST
+              value: catalogo-db-rw
+            - name: DB_NAME
+              value: catalogo
+            - name: DB_USER
+              value: catalogo
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: db-password
+              mountPath: /etc/catalogo/db
+              readOnly: true
+      volumes:
+        - name: db-password
+          secret:
+            secretName: catalogo-db-app
+            items:
+              - key: password
+                path: password

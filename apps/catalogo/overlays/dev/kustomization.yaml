@@ -1,0 +1,20 @@
+# Overlay dev de catalogo: la base sin cambios, más lo propio del ambiente.
+# Doc: https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Todos los recursos de la base van a este namespace.
+namespace: catalogo-dev
+
+resources:
+  - ../../base
+
+# El host del Ingress es un marcador en la base; aquí se pone el real.
+patches:
+  - target:
+      kind: Ingress
+      name: catalogo
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: catalogo-dev-alumno02.argocd-lab.sandbox3477.opentlc.com
