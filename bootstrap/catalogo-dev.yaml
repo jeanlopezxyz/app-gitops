@@ -13,6 +13,12 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: catalogo-dev
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      name: catalogo-frontend
+      jsonPointers:
+        - /spec/replicas
   syncPolicy:
     automated:
       prune: true
@@ -20,3 +26,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - PruneLast=true
+      - RespectIgnoreDifferences=true
