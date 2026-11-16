@@ -21,3 +21,28 @@ headlamp:
       memory: 32Mi
     limits:
       memory: 128Mi
+  # Plugins. El contenedor auxiliar headlamp-plugin instala con pluginctl los
+  # plugins de la lista, con su versión fijada y comprobando el checksum que
+  # publica Artifact Hub, en una carpeta compartida con Headlamp. watchPlugins
+  # hace que Headlamp los cargue en cuanto aparecen.
+  # Doc: https://headlamp.dev/docs/latest/installation/in-cluster/#plugin-management
+  config:
+    watchPlugins: true
+  pluginsManager:
+    enabled: true
+    baseImage: node:26.13.1-alpine3.24   # node:lts-alpine fijado
+    version: 0.1.1                       # @headlamp-k8s/pluginctl
+    configContent: |
+      plugins:
+        # Plugin oficial de Argo CD (Alpha). Lee Applications y AppProjects con
+        # el token de quien entra: sin RBAC sobre argoproj.io no ve nada.
+        # https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_argocd
+        - name: argocd
+          source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_argocd
+          version: 0.1.0-alpha
+    resources:
+      requests:
+        cpu: 10m
+        memory: 96Mi
+      limits:
+        memory: 256Mi
