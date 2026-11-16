@@ -23,10 +23,14 @@ headlamp:
       memory: 128Mi
   # Plugins. El contenedor auxiliar headlamp-plugin instala con pluginctl los
   # plugins de la lista, con su versión fijada y comprobando el checksum que
-  # publica Artifact Hub, en una carpeta compartida con Headlamp. watchPlugins
-  # hace que Headlamp los cargue en cuanto aparecen.
+  # publica Artifact Hub (el sha256 de cada comentario), en una carpeta
+  # compartida con Headlamp. watchPlugins hace que Headlamp los cargue en
+  # cuanto aparecen.
   # Doc: https://headlamp.dev/docs/latest/installation/in-cluster/#plugin-management
   config:
+    # Nombre del clúster en la UI y en las rutas (/c/hub-alumno02/...). Sin
+    # este valor, Headlamp lo llama "main".
+    inClusterContextName: hub-alumno02
     watchPlugins: true
   pluginsManager:
     enabled: true
@@ -34,12 +38,28 @@ headlamp:
     version: 0.1.1                       # @headlamp-k8s/pluginctl
     configContent: |
       plugins:
+        # El de Prometheus no va aquí: viene dentro de la imagen de Headlamp.
         # Plugin oficial de Argo CD (Alpha). Lee Applications y AppProjects con
         # el token de quien entra: sin RBAC sobre argoproj.io no ve nada.
         # https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_argocd
+        # sha256 52eec016c40e1abe2c9a797391de0119c94f10c22005f9638389027604e8c39b
         - name: argocd
           source: https://artifacthub.io/packages/headlamp/headlamp-plugins/headlamp_argocd
           version: 0.1.0-alpha
+        # CloudNativePG (editor verificado: el proyecto cloudnative-pg). Clusters,
+        # backups y poolers de PostgreSQL. Pide Headlamp >=0.42.
+        # https://artifacthub.io/packages/headlamp/cnpg-headlamp-plugin/cnpg-headlamp-plugin
+        # sha256 1061a1ab4b77ed480c72f71cdc6b11d92ddccba15012f2c192ffde9d31fbfeaa
+        - name: cnpg
+          source: https://artifacthub.io/packages/headlamp/cnpg-headlamp-plugin/cnpg-headlamp-plugin
+          version: 0.1.6
+        # External Secrets Operator (editor verificado, Beta). ExternalSecrets y
+        # SecretStores; la sección queda vacía hasta el laboratorio 3.
+        # https://artifacthub.io/packages/headlamp/external-secrets-operator-headlamp-plugin/external-secrets-operator
+        # sha256 efbe8d3b71c904b8bc361d03706c85b840a8cec1a8770afc39bb77c97d914a1d
+        - name: external-secrets
+          source: https://artifacthub.io/packages/headlamp/external-secrets-operator-headlamp-plugin/external-secrets-operator
+          version: 0.1.0-beta7
     resources:
       requests:
         cpu: 10m
