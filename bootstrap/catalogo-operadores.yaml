@@ -1,0 +1,60 @@
+# Catálogo de operadores: una Application por archivo de platform/catalogo-operadores/
+# (generador Git de archivos). Cada archivo dice qué chart, qué versión y en qué namespace.
+# Instalar un operador = agregar un archivo; quitarlo = borrarlo: el ApplicationSet borra
+# la Application y el finalizer borra sus recursos, salvo los marcados con
+# helm.sh/resource-policy: keep (los CRD de cert-manager).
+# Doc: https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-Git/#git-generator-files
+#      https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Template/#template-patch
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: catalogo-operadores
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/jeanlopezxyz/app-gitops.git
+        revision: extra/catalogo-operadores
+        files:
+          - path: platform/catalogo-operadores/*.yaml
+  # Sin applicationsSync: create-update a propósito: borrar el archivo tiene que
+  # desinstalar el operador (con create-update, la Application quedaría).
+  template:
+    metadata:
+      name: "{{ .nombre }}"
+      labels:
+        app.kubernetes.io/part-of: catalogo-operadores
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default   # el de los add-ons de plataforma
+      source:
+        repoURL: "{{ .repoURL }}"
+        chart: "{{ .chart }}"
+        targetRevision: "{{ .version }}"
+        helm:
+          releaseName: "{{ .nombre }}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "{{ .namespace }}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+  # Lo que no es texto (los values y la opción ServerSideApply, que es opcional)
+  # va en templatePatch. toJson evita que un archivo meta YAML arbitrario.
+  templatePatch: |
+    spec:
+      source:
+        helm:
+          valuesObject: {{ dig "values" (dict) . | toJson }}
+    {{- if dig "serverSideApply" false . }}
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+    {{- end }}
