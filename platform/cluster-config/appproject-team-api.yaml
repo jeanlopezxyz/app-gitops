@@ -26,7 +26,7 @@ spec:
       namespace: catalogo-qa
       defaultServiceAccount: team-api-deployer
     # destinationServiceAccounts solo acepta "server", no "name": la IP privada del spoke.
-    - server: https://10.60.5.249:6443
+    - server: https://10.60.17.69:6443
       namespace: catalogo-prod
       defaultServiceAccount: team-api-deployer
   namespaceResourceBlacklist:
