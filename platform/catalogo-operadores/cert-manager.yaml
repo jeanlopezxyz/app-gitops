@@ -1,0 +1,29 @@
+# Operador del catálogo: cert-manager, certificados TLS como recursos de Kubernetes.
+# Instalar = agregar este archivo en un pull request. Quitar = borrarlo.
+# Chart oficial: https://artifacthub.io/packages/helm/cert-manager/cert-manager
+# Doc: https://cert-manager.io/docs/installation/helm/
+nombre: cert-manager
+repoURL: https://charts.jetstack.io
+chart: cert-manager
+version: v1.21.3
+namespace: cert-manager
+# Tres de sus seis CRD pasan de 256 KiB, el límite del apply del lado del cliente.
+serverSideApply: true
+values:
+  crds:
+    enabled: true   # el chart instala los CRD
+    keep: true      # helm.sh/resource-policy: keep: Argo CD no los borra al quitar el operador
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+  webhook:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
+  cainjector:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
