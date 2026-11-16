@@ -1,7 +1,7 @@
 # Prometheus 3.16 (chart prometheus 29.47.2) solo con el servidor: sin Alertmanager,
-# node-exporter, kube-state-metrics ni pushgateway, y sin los trabajos de raspado
-# del clúster. Raspa Argo CD descubriendo los endpoints de sus Services de
-# métricas, así ve cada réplica del controller.
+# node-exporter, kube-state-metrics ni pushgateway, y de los trabajos de raspado
+# del clúster solo el de cAdvisor, recortado. Raspa Argo CD descubriendo los
+# endpoints de sus Services de métricas, así ve cada réplica del controller.
 # https://argo-cd.readthedocs.io/en/stable/operator-manual/metrics/#prometheus-operator
 # Chart: https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus
 alertmanager:
@@ -41,8 +41,6 @@ scrapeConfigs:
     enabled: false
   kubernetes-nodes:
     enabled: false
-  kubernetes-nodes-cadvisor:
-    enabled: false
   kubernetes-service-endpoints:
     enabled: false
   kubernetes-service-endpoints-slow:
@@ -55,6 +53,15 @@ scrapeConfigs:
     enabled: false
   kubernetes-pods-slow:
     enabled: false
+  # cAdvisor del kubelet: CPU, memoria, red y disco de cada contenedor. Son las
+  # gráficas que pinta el plugin de Prometheus de Headlamp en Pods y
+  # Deployments. Solo se guardan las 6 métricas que usa: el resto de cAdvisor
+  # multiplicaría las series sin uso.
+  kubernetes-nodes-cadvisor:
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        action: keep
+        regex: container_(cpu_usage_seconds_total|memory_working_set_bytes|network_(receive|transmit)_bytes_total|fs_(reads|writes)_bytes_total)
   # Todos los Services de Argo CD exponen sus métricas en un puerto llamado "metrics".
   argocd:
     kubernetes_sd_configs:
